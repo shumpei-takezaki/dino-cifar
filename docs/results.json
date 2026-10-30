@@ -31,5 +31,16 @@
     "knn_patch_mean_top1": 84.04,
     "linear_cls_top1": 79.83999848365784,
     "linear_patch_mean_top1": 84.99999642372131
+  },
+  {
+    "method": "dinov2",
+    "epochs": 1000,
+    "num_register_tokens": 0,
+    "patch_size": 4,
+    "embed_dim": 384,
+    "knn_cls_top1": 86.96,
+    "knn_patch_mean_top1": 87.04,
+    "linear_cls_top1": 76.58999562263489,
+    "linear_patch_mean_top1": 89.53999876976013
   }
 ]

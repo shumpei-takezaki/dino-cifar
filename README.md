@@ -21,8 +21,8 @@ compare encoder sizes in [rae-cifar](https://github.com/shumpei-takezaki/rae-cif
 | DINOv2-Reg4, ViT-Tiny/4 | 84.59 | 84.04 | 79.84 | 85.00 |
 | DINOv2, ViT-S/4 | 86.96 | 87.04 | 76.59 | 89.54 |
 
-The linear-probe hyperparameters are fixed and untuned, so the CLS linear numbers are provisional. Details, training curves
-and qualitative analysis (in Japanese): [docs/results.md](docs/results.md).
+The linear-probe hyperparameters are fixed and untuned, so the CLS linear numbers are provisional. Details, training curves,
+qualitative analysis and the patch-token / register analysis: [docs/](docs/README.md).
 
 The DINOv2 ViT-Tiny/4 and ViT-S/4 teacher backbones and the DINO ViT-Tiny/4 backbone are released with rae-cifar on
 Hugging Face ([shumpei777/rae-cifar](https://huggingface.co/shumpei777/rae-cifar): `encoder_dinov2_vit_tiny4.pt`,
