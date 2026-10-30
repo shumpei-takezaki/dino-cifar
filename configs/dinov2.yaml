@@ -1,0 +1,16 @@
+_base_: base.yaml
+method: dinov2
+
+model:
+  num_register_tokens: 0
+
+loss:
+  dino_weight: 1.0
+  ibot_weight: 1.0
+  koleo_weight: 0.1
+
+ibot:
+  separate_head: false
+  mask_sample_probability: 0.5
+  mask_ratio_min: 0.1
+  mask_ratio_max: 0.5

@@ -1,0 +1,12 @@
+# DINOv2 (R=0) with a ViT-S/4 backbone: the official ViT-S size (width 384, 12 layers, 6 heads, MLP ratio 4).
+# Everything else is dinov2.yaml (and base.yaml) unchanged, except TF32 matmuls: in strict fp32 ViT-S is GPU-bound
+# (~136 s/epoch, ~38 h); TF32 brings it back to ~57 s/epoch (~16 h). The ViT-Tiny/4 runs used strict fp32.
+# Used as a larger RAE encoder in ../rae-cifar (latent [384, 8, 8]).
+_base_: dinov2.yaml
+
+model:
+  embed_dim: 384
+  num_heads: 6
+
+train:
+  allow_tf32: true

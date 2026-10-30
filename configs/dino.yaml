@@ -1,0 +1,7 @@
+_base_: base.yaml
+method: dino
+
+loss:
+  dino_weight: 1.0
+  ibot_weight: 0.0
+  koleo_weight: 0.0

@@ -1,0 +1,93 @@
+dataset:
+  name: cifar10
+  root: ./data
+  mean: [0.4914, 0.4822, 0.4465]
+  std: [0.2470, 0.2435, 0.2616]
+  num_workers: 4
+
+model:
+  img_size: 32
+  patch_size: 4
+  embed_dim: 192
+  depth: 12
+  num_heads: 3
+  mlp_ratio: 4.0
+  qkv_bias: true
+  drop_path_rate: 0.1
+  num_register_tokens: 0
+
+head:
+  out_dim: 4096
+  hidden_dim: 512
+  bottleneck_dim: 128
+  num_layers: 3
+  use_batch_norm: false
+  weight_norm_last_layer: true
+
+augment:
+  profile: mrnghia90
+
+  global_size: 32
+  local_size: 16
+  num_global_crops: 2
+  num_local_crops: 4
+  global_scale: [0.7, 1.0]
+  local_scale: [0.3, 0.7]
+
+  horizontal_flip_prob: 0.5
+
+  color_jitter_prob: 0.8
+  brightness: 0.4
+  contrast: 0.4
+  saturation: 0.2
+  hue: 0.1
+  grayscale_prob: 0.2
+
+  global_blur_prob: 0.5
+  global_blur_kernel_size: 3
+  global_blur_sigma: [0.1, 2.0]
+
+  local_blur_prob: 0.0
+  solarize_prob: 0.0
+
+train:
+  epochs: 1000
+  global_batch_size: 256
+
+  optimizer: adamw
+  base_lr: 0.0005
+  lr_reference_batch_size: 256
+  min_lr: 0.000001
+  warmup_epochs: 10
+
+  weight_decay_start: 0.04
+  weight_decay_end: 0.4
+
+  grad_clip_norm: 3.0
+  freeze_last_layer_epochs: 1
+
+  teacher_momentum_start: 0.996
+  teacher_momentum_end: 1.0
+
+  student_temperature: 0.1
+  teacher_temperature: 0.04
+  center_momentum: 0.9
+
+  precision: fp32
+  allow_tf32: false   # true = TF32 matmuls on Ampere+ (faster, slightly less precise than strict fp32)
+  device: auto
+  seed: 0
+
+  checkpoint_every_epochs: 100
+  knn_eval_every_epochs: 50
+  log_every_steps: 50
+
+loss:
+  dino_weight: 1.0
+  ibot_weight: 0.0
+  koleo_weight: 0.0
+
+logging:
+  wandb: true               # online if logged in, else offline under <output_dir>/wandb (see README)
+  wandb_project: dino-cifar
+  wandb_entity: null

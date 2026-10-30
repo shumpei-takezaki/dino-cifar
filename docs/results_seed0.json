@@ -1,0 +1,35 @@
+[
+  {
+    "method": "dino",
+    "epochs": 1000,
+    "num_register_tokens": 0,
+    "patch_size": 4,
+    "embed_dim": 192,
+    "knn_cls_top1": 82.04,
+    "knn_patch_mean_top1": 78.27,
+    "linear_cls_top1": 79.85999584197998,
+    "linear_patch_mean_top1": 77.73999571800232
+  },
+  {
+    "method": "dinov2",
+    "epochs": 1000,
+    "num_register_tokens": 0,
+    "patch_size": 4,
+    "embed_dim": 192,
+    "knn_cls_top1": 85.49,
+    "knn_patch_mean_top1": 86.05,
+    "linear_cls_top1": 81.25,
+    "linear_patch_mean_top1": 86.58999800682068
+  },
+  {
+    "method": "dinov2",
+    "epochs": 1000,
+    "num_register_tokens": 4,
+    "patch_size": 4,
+    "embed_dim": 192,
+    "knn_cls_top1": 84.59,
+    "knn_patch_mean_top1": 84.04,
+    "linear_cls_top1": 79.83999848365784,
+    "linear_patch_mean_top1": 84.99999642372131
+  }
+]
