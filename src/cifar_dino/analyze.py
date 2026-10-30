@@ -6,7 +6,7 @@
   (over ``--n-pos-mean`` test images) is subtracted first: otherwise ~12% of the patch variance is position
   alone and PC1 just splits the top from the bottom of the image.
 
-    python -m cifar_dino.analyze outputs/{dino,dinov2,dinov2_reg4}/seed_0/teacher_backbone.pt --out-dir outputs/analysis
+    python -m cifar_dino.analyze outputs/{dino,dinov2,dinov2_reg4}/teacher_backbone.pt --out-dir outputs/analysis
 """
 
 import argparse

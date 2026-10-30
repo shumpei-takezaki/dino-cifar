@@ -44,7 +44,7 @@
 | DINOv2 | 81.5 / 78.1 | 83.5 / 81.6 | 84.7 / 83.3 | 85.1 / 85.1 | 85.4 / 85.8 | 85.5 / 86.0 |
 | DINOv2-Reg4 | 81.6 / 77.8 | 83.4 / 81.6 | 84.4 / 82.7 | 84.7 / 83.1 | 84.7 / 84.0 | 84.6 / 84.0 |
 
-50 epoch ごとの値はすべて `outputs/<構成>/seed_0/train.jsonl`(`knn_*` キー)にある。
+50 epoch ごとの値はすべて `outputs/<構成>/train.jsonl`(`knn_*` キー)にある。
 
 ## 4. 学習の健全性
 
@@ -74,9 +74,9 @@
 
 | 構成 | 出力 |
 |---|---|
-| DINO | `outputs/dino/seed_0/` |
-| DINOv2 | `outputs/dinov2/seed_0/` |
-| DINOv2-Reg4 | `outputs/dinov2_reg4/seed_0/` |
+| DINO | `outputs/dino/` |
+| DINOv2 | `outputs/dinov2/` |
+| DINOv2-Reg4 | `outputs/dinov2_reg4/` |
 
 各ディレクトリの中身:
 - `teacher_backbone.pt`: 下流タスク用
@@ -96,7 +96,7 @@
 
 ## 8. 定性解析(seed 0、1000 epoch)
 
-`python -m cifar_dino.analyze`(README 参照)で作成した。図は `outputs/analysis/seed_0/` にある(git 管理外)。
+`python -m cifar_dino.analyze`(README 参照)で作成した。図は `outputs/analysis/` にある(git 管理外)。
 
 - **t-SNE(`tsne.png`、test 5000枚):** DINO のパッチ平均はクラスが混ざっており、まとまっているのは乗り物系だけ。
   DINOv2 と Reg4 のパッチ平均は、クラスごとのクラスタに分かれている。kNN の差(78.3 → 86.0)と合っている。
@@ -130,7 +130,7 @@ RAE で latent として使う前提で、test 5000枚 × 64パッチの teacher
 ## 10. エンコーダの大きさ:ViT-Tiny/4 と ViT-S/4(DINOv2、R=0、seed 0、1000 epoch)
 
 rae-cifar でエンコーダの容量を比べるため(rae-cifar の docs/experiments/06)、DINOv2 を ViT-S/4 でも学習した
-(`configs/dinov2_vits.yaml`:幅 384、ヘッド 6。ほかは `dinov2.yaml` と同じ)。出力は `outputs/dinov2_vits/seed_0/`。
+(`configs/dinov2_vits.yaml`:幅 384、ヘッド 6。ほかは `dinov2.yaml` と同じ)。出力は `outputs/dinov2_vits/`。
 
 | エンコーダ | 幅 | kNN CLS | kNN PatchMean | Linear CLS | Linear PatchMean |
 |---|---:|---:|---:|---:|---:|

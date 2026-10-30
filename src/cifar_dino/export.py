@@ -1,6 +1,6 @@
 """Clean teacher-backbone export (no heads, no optimizer) and loader.
 
-    python -m cifar_dino.export --checkpoint outputs/dino/seed_0/checkpoints/checkpoint_last.pt
+    python -m cifar_dino.export --checkpoint outputs/dino/checkpoints/checkpoint_last.pt
 """
 
 import argparse

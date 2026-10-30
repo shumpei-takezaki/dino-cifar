@@ -1,7 +1,7 @@
 """Label-using evaluation of the frozen teacher backbone: k-NN (CLS / mean patch) and linear probe.
 
-    python -m cifar_dino.evaluate --checkpoint outputs/dinov2/seed_0/teacher_backbone.pt --data-root ./data
-    python -m cifar_dino.evaluate --table outputs/*/seed_0/metrics.json
+    python -m cifar_dino.evaluate --checkpoint outputs/dinov2/teacher_backbone.pt --data-root ./data
+    python -m cifar_dino.evaluate --table outputs/*/metrics.json
 """
 
 import argparse

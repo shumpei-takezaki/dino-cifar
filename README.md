@@ -32,7 +32,7 @@ Hugging Face ([shumpei777/rae-cifar](https://huggingface.co/shumpei777/rae-cifar
 
 ```bash
 uv sync
-echo 'WANDB_API_KEY=...' > .env   # optional; scripts load it. Without a key, wandb logs offline (`wandb sync outputs/*/seed_*/wandb/offline-run-*`)
+echo 'WANDB_API_KEY=...' > .env   # optional; scripts load it. Without a key, wandb logs offline (`wandb sync outputs/*/wandb/offline-run-*`)
 # CIFAR-10 is downloaded to ./data automatically (or symlink an existing data/cifar-10-batches-py)
 uv run pytest -q
 ```
@@ -46,27 +46,27 @@ Run long jobs in a detached tmux session. The scripts resume automatically from 
 uv run python -m cifar_dino.train --config configs/dino.yaml   --epochs 2 --batch-size 32 --output-dir outputs/smoke_dino
 uv run python -m cifar_dino.train --config configs/dinov2.yaml --epochs 2 --batch-size 32 --output-dir outputs/smoke_dinov2
 
-# primary 1000-epoch runs (seed 0; pass another seed as the first arg)
-tmux new-session -d -s dino        'scripts/train_dino.sh 0        > outputs/dino_seed0.log 2>&1'
-tmux new-session -d -s dinov2      'scripts/train_dinov2.sh 0      > outputs/dinov2_seed0.log 2>&1'
-tmux new-session -d -s dinov2_reg4 'scripts/train_dinov2_reg4.sh 0 > outputs/dinov2_reg4_seed0.log 2>&1'
+# primary 1000-epoch runs (seed 0; another seed: append --seed N --output-dir outputs/<config>_seedN)
+tmux new-session -d -s dino        'scripts/train_dino.sh        > outputs/dino.log 2>&1'
+tmux new-session -d -s dinov2      'scripts/train_dinov2.sh      > outputs/dinov2.log 2>&1'
+tmux new-session -d -s dinov2_reg4 'scripts/train_dinov2_reg4.sh > outputs/dinov2_reg4.log 2>&1'
 
 # explicit resume
-uv run python -m cifar_dino.train --config configs/dinov2.yaml --output-dir outputs/dinov2/seed_0 \
-  --resume outputs/dinov2/seed_0/checkpoints/checkpoint_last.pt
+uv run python -m cifar_dino.train --config configs/dinov2.yaml --output-dir outputs/dinov2 \
+  --resume outputs/dinov2/checkpoints/checkpoint_last.pt
 
 # DDP (the global batch stays 256; the per-GPU batch is 256 / world_size)
-uv run torchrun --nproc_per_node=2 -m cifar_dino.train --config configs/dino.yaml --output-dir outputs/dino/seed_0
+uv run torchrun --nproc_per_node=2 -m cifar_dino.train --config configs/dino.yaml --output-dir outputs/dino
 ```
 
 Measured on one A100-40GB, bs 256, fp32: about 55–75 s/epoch, so each 1000-epoch run takes about 16–20 h.
 The GPU stays at ~98% utilization, and TF32 (`train.allow_tf32: true`) only saves about 6%.
 
-Each run writes to `outputs/<config>/seed_<seed>/`:
+Each run writes to `outputs/<config>/`:
 - `config.yaml`: the resolved config, including all augmentation parameters
 - `env.json`: git commit, library versions and GPU
 - `train.jsonl`: step records every 50 steps and epoch averages, with each loss logged separately, plus kNN every 50 epochs. This is the canonical log.
-- `wandb/`, `wandb_run_id.txt`: wandb run (project `dino-cifar`, run `<config>_seed_<seed>`). Step records go under `train/*` and epoch records under `epoch/*`, and a resumed run continues the same wandb run.
+- `wandb/`, `wandb_run_id.txt`: wandb run (project `dino-cifar`, run `<config>`). Step records go under `train/*` and epoch records under `epoch/*`, and a resumed run continues the same wandb run.
 - `checkpoints/checkpoint_last.pt` and `checkpoints/checkpoint_epoch_XXXX.pt`
 - `teacher_backbone.pt`
 - `metrics.json`: final kNN and linear probe results
@@ -74,8 +74,8 @@ Each run writes to `outputs/<config>/seed_<seed>/`:
 ## Evaluation
 
 ```bash
-uv run python -m cifar_dino.evaluate --checkpoint outputs/dinov2/seed_0/teacher_backbone.pt --data-root ./data
-uv run python -m cifar_dino.evaluate --table outputs/{dino,dinov2,dinov2_reg4}/seed_0/metrics.json  # -> results.md / results.json
+uv run python -m cifar_dino.evaluate --checkpoint outputs/dinov2/teacher_backbone.pt --data-root ./data
+uv run python -m cifar_dino.evaluate --table outputs/{dino,dinov2,dinov2_reg4}/metrics.json  # -> results.md / results.json
 ```
 
 - **kNN:** k=20, T=0.07, run on the L2-normalized CLS token and on the mean patch token.
@@ -84,7 +84,7 @@ uv run python -m cifar_dino.evaluate --table outputs/{dino,dinov2,dinov2_reg4}/s
 ### Qualitative analysis
 
 ```bash
-uv run python -m cifar_dino.analyze outputs/{dino,dinov2,dinov2_reg4}/seed_0/teacher_backbone.pt --out-dir outputs/analysis/seed_0
+uv run python -m cifar_dino.analyze outputs/{dino,dinov2,dinov2_reg4}/teacher_backbone.pt --out-dir outputs/analysis
 ```
 
 Writes `tsne.png` (t-SNE of the L2-normalized CLS / mean-patch features on 5000 test images) and `patch_pca.png`
@@ -96,7 +96,7 @@ the PCA; without this, PC1 mostly separates the top of the image from the bottom
 ```python
 from cifar_dino.export import load_backbone
 
-model, meta = load_backbone("outputs/dinov2/seed_0/teacher_backbone.pt")  # no projection head needed
+model, meta = load_backbone("outputs/dinov2/teacher_backbone.pt")  # no projection head needed
 with torch.no_grad():
     out = model.forward_features(images)        # images: CIFAR-normalized [B,3,32,32]
 cls, regs, patches = out["cls"], out["reg_tokens"], out["patch_tokens"]  # [B,192], [B,R,192], [B,64,192]

@@ -1,6 +1,6 @@
 """DINO / DINOv2 self-supervised pretraining on CIFAR-10.
 
-    python -m cifar_dino.train --config configs/dinov2.yaml --output-dir outputs/dinov2/seed_0
+    python -m cifar_dino.train --config configs/dinov2.yaml --output-dir outputs/dinov2
     torchrun --nproc_per_node=2 -m cifar_dino.train --config configs/dino.yaml   # DDP; global batch unchanged
 
 DINO   = DINO CLS loss.
@@ -160,7 +160,7 @@ def init_wandb(cfg: dict, out_dir: Path):
     except (FileNotFoundError, netrc.NetrcParseError):
         logged_in = False
     lc = cfg["logging"]
-    run = wandb.init(project=lc["wandb_project"], entity=lc["wandb_entity"], name=f"{out_dir.parent.name}_{out_dir.name}",
+    run = wandb.init(project=lc["wandb_project"], entity=lc["wandb_entity"], name=out_dir.name,
                      id=id_file.read_text().strip(), resume="allow", config=cfg, dir=out_dir,
                      mode=os.environ.get("WANDB_MODE") or ("online" if logged_in else "offline"))
     run.define_metric("train/global_step")
@@ -333,7 +333,7 @@ def train(cfg: dict, output_dir: str | Path, resume: str | Path | None = None) -
 def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--config", required=True)
-    p.add_argument("--output-dir", help="default: outputs/<config name>/seed_<seed>")
+    p.add_argument("--output-dir", help="default: outputs/<config name>")
     p.add_argument("--resume", help="checkpoint to resume from")
     p.add_argument("--epochs", type=int)
     p.add_argument("--batch-size", type=int, help="global batch size (LR is rescaled accordingly)")
@@ -351,7 +351,7 @@ def main() -> None:
         dc["root"] = args.data_root
     if args.num_workers is not None:
         dc["num_workers"] = args.num_workers
-    out = args.output_dir or f"outputs/{Path(args.config).stem}/seed_{tc['seed']}"
+    out = args.output_dir or f"outputs/{Path(args.config).stem}"
     train(cfg, out, args.resume)
 
 
