@@ -25,8 +25,8 @@ The linear-probe hyperparameters are fixed and untuned, so the CLS linear number
 qualitative analysis and the patch-token / register analysis: [docs/](docs/README.md).
 
 The DINOv2 ViT-Tiny/4 and ViT-S/4 teacher backbones and the DINO ViT-Tiny/4 backbone are released with rae-cifar on
-Hugging Face ([shumpei777/rae-cifar](https://huggingface.co/shumpei777/rae-cifar): `encoder_dinov2_vit_tiny4.pt`,
-`encoder_dinov2_vit_s4.pt`, `disc_dino_vit_tiny4.pt`); load them with `load_backbone` below.
+Hugging Face ([shumpei777/rae-cifar](https://huggingface.co/shumpei777/rae-cifar): `encoders/encoder_dinov2_vit_tiny4.pt`,
+`encoders/encoder_dinov2_vit_s4.pt`, `encoders/disc_dino_vit_tiny4.pt`); load them with `load_backbone` below.
 
 ## Setup
 
